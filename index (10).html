@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyra Esport Tournaments</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{color:#fff;overflow-x:hidden;min-height:100vh;background:linear-gradient(270deg,#6a0dad,#1e90ff,#6a0dad);background-size:600% 600%;animation:gradientBG 12s ease infinite;position:relative;}
+body::before{content:"";position:fixed;top:0;left:0;width:200%;height:200%;background-image:linear-gradient(115deg,rgba(255,255,255,0.05) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.05) 50%,rgba(255,255,255,0.05) 75%,transparent 75%,transparent);background-size:60px 60px;animation:moveLines 6s linear infinite;z-index:0;}
+@keyframes gradientBG{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+@keyframes moveLines{0%{transform:translate(0,0);}100%{transform:translate(-60px,-60px);}}
+header{display:flex;justify-content:center;align-items:center;padding:10px 15px;background:rgba(0,0,0,0.8);position:relative;z-index:2;}
+header .title-box{border:2px solid #ffd700;padding:6px 12px;font-size:1.2em;font-weight:bold;border-radius:8px;box-shadow:0 0 8px #ff00ff;text-align:center;background:rgba(0,0,0,0.5);}
+.description{margin:15px auto;text-align:center;font-size:1em;line-height:1.4;background:rgba(0,0,0,0.5);padding:12px;border-radius:8px;max-width:90%;}
+.prize-box{text-align:center;margin:15px auto;padding:15px;max-width:480px;border-radius:12px;border:2px solid #ff00ff;background:rgba(0,0,0,0.6);box-shadow:0 0 15px #ff00ff,0 0 25px #6a0dad inset;animation:glowPrize 2.5s ease-in-out infinite alternate;font-weight:bold;font-size:1em;}
+@keyframes glowPrize{0%{box-shadow:0 0 10px #ff00ff,0 0 20px #6a0dad inset;}50%{box-shadow:0 0 25px #ff00ff,0 0 50px #6a0dad inset;}100%{box-shadow:0 0 10px #ff00ff,0 0 20px #6a0dad inset;}}
+.games{padding:15px;text-align:center;position:relative;z-index:1;}
+.games h2{margin-bottom:15px;font-size:1.6em;color:#ffd700;text-shadow:0 0 8px #ff00ff;}
+.game-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;justify-items:center;}
+.game-card{width:150px;cursor:pointer;overflow:hidden;border-radius:12px;box-shadow:0 0 8px #ff00ff;transition:0.3s;background:rgba(0,0,0,0.5);}
+.game-card:hover{transform:translateY(-5px);box-shadow:0 0 15px #ff00ff,0 0 20px #ff004f;}
+.game-card img{width:100%;height:100px;object-fit:cover;border-radius:12px;}
+#tournament-page{display:none;padding:15px;text-align:center;background:rgba(0,0,0,0.6);margin:15px auto;border-radius:10px;position:relative;z-index:1;max-width:90%;}
+#tournament-page.show{display:block;animation:fadeSlideIn 0.6s ease forwards;}
+#tournament-page img{width:70%;max-width:200px;border-radius:12px;box-shadow:0 0 15px #ff00ff;margin-bottom:10px;}
+#tournament-page h2{color:#ffd700;margin-bottom:10px;font-size:1.4em;}
+.glow-panel{margin:10px auto 18px;padding:14px 16px;width:100%;max-width:480px;background:rgba(0,0,0,0.85);border-radius:12px;border:2px solid #ff00ff;box-shadow:0 0 18px #ff00ff,0 0 36px #6a0dad inset;animation:panelGlow 2.2s ease-in-out infinite alternate;text-align:left;}
+@keyframes panelGlow{0%{box-shadow:0 0 12px #ff00ff,0 0 20px #6a0dad inset;}50%{box-shadow:0 0 28px #ff00ff,0 0 60px #6a0dad inset;}100%{box-shadow:0 0 12px #ff00ff,0 0 20px #6a0dad inset;}}
+.glow-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0;}
+.glow-label{color:#ffd700;font-weight:bold;}
+.glow-value{color:#fff;text-shadow:0 0 6px #fff;}
+input,select,textarea{margin:5px 0;padding:10px;width:90%;border-radius:6px;border:1px solid #fff;}
+button#payNowBtn{padding:12px 25px;margin-top:10px;border:none;border-radius:6px;background:linear-gradient(90deg,#ff004f,#6a0dad);color:#fff;font-weight:bold;cursor:pointer;box-shadow:0 0 10px #ff00ff;transition:0.3s;}
+button#payNowBtn:hover{transform:scale(1.05);box-shadow:0 0 20px #ff00ff;}
+.submit-btn{display:block;margin-top:10px;text-decoration:none;padding:12px 25px;background:#00ffea;color:#000;font-weight:bold;border-radius:6px;box-shadow:0 0 10px #00ffea;text-align:center;pointer-events:none;opacity:0.5;}
+.submit-btn.active{pointer-events:auto;opacity:1;}
+#postSubmitArea{margin-top:12px;font-weight:bold;color:#00ffea;text-shadow:0 0 6px #00ffea;}
+.info-box{margin:15px auto;padding:15px;background:linear-gradient(90deg,#ff0000,#0000ff);border-radius:12px;border:2px solid #fff;text-align:left;z-index:1;box-shadow:0 0 20px #ff0000,0 0 20px #0000ff inset;animation:glowInfo 3s ease-in-out infinite alternate;font-size:0.95em;line-height:1.5;max-width:90%;}
+.info-box p{color:#fff;font-weight:bold;text-shadow:0 0 5px #fff;}
+.notice-box{margin:15px auto;padding:15px;max-width:480px;background:rgba(0,0,0,0.7);border:2px solid #ffd700;border-radius:10px;color:#fff;box-shadow:0 0 15px #ffd700;line-height:1.5;font-size:0.95em;}
+.whatsapp-box{margin:15px auto 25px auto;padding:20px;background:rgba(0,0,0,0.8);border-radius:12px;border:2px solid #25D366;text-align:center;z-index:1;box-shadow:0 0 20px #25D366,0 0 40px #25D366 inset;animation:glowBox 2s ease-in-out infinite alternate;max-width:90%;}
+.whatsapp-box p{font-size:1.1em;font-weight:bold;text-shadow:0 0 6px #25D366;}
+.whatsapp-box a{display:inline-block;margin-top:10px;padding:12px 25px;background:linear-gradient(90deg,#25D366,#1ebc57);color:#fff;text-decoration:none;font-weight:bold;border-radius:8px;box-shadow:0 0 10px #25D366,0 0 20px #1ebc57 inset;transition:all 0.3s ease-in-out;animation:pulseBtn 2s infinite;}
+.whatsapp-box a:hover{transform:scale(1.1);box-shadow:0 0 25px #25D366,0 0 50px #1ebc57 inset;}
+.tournament-details-btn{margin:10px auto;padding:10px 15px;background:linear-gradient(90deg,#ff00ff,#6a0dad);color:#fff;border-radius:8px;cursor:pointer;box-shadow:0 0 10px #ff00ff;text-align:center;display:inline-block;transition:0.3s;}
+.tournament-details-btn:hover{transform:scale(1.05);box-shadow:0 0 20px #ff00ff;}
+#detailsPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);padding:20px;border-radius:12px;border:2px solid #ff00ff;box-shadow:0 0 25px #ff00ff;z-index:999;max-width:90%;text-align:center;}
+#detailsPopup h3{color:#ffd700;margin-bottom:10px;}
+#detailsPopup p{color:#fff;margin:5px 0;font-weight:bold;}
+#detailsPopup .close-btn{margin-top:15px;padding:8px 20px;background:#ff004f;color:#fff;border:none;border-radius:6px;cursor:pointer;box-shadow:0 0 10px #ff00ff;}
+@keyframes pulseBtn{0%{box-shadow:0 0 10px #25D366,0 0 20px #1ebc57 inset;}50%{box-shadow:0 0 20px #25D366,0 0 40px #1ebc57 inset;}100%{box-shadow:0 0 10px #25D366,0 0 20px #1ebc57 inset;}}
+@keyframes fadeSlideIn{0%{opacity:0;transform:translateY(-20px);}100%{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-box">Hyra Esport Tournaments</div>
+</header>
+
+<div class="description">
+  <p>🎮 Join esport tournaments using your skills 🏆. Play solo or with teammates 💪. Big prizes await! 🔥</p>
+</div>
+
+<div class="prize-box">
+  <p>🥇 First prize upto ₹400 | 🥈 Second prize upto ₹150 | 🥉 Third prize upto ₹50 (Based on entries)</p>
+</div>
+
+<section class="games">
+  <h2>Available Tournaments</h2>
+  <div class="game-cards">
+    <div class="game-card" onclick="openTournament('Free Fire')"><img src="https://i1.sndcdn.com/artworks-1fNo0tptQSdZl85i-y56KrQ-t500x500.jpg" alt="Free Fire"></div>
+    <div class="game-card" onclick="openTournament('Pokémon Unite')"><img src="https://static1.srcdn.com/wordpress/wp-content/uploads/2021/07/Pokemon-Unite-Logo-and-Promo-Art.jpg" alt="Pokemon Unite"></div>
+    <div class="game-card" onclick="openTournament('COD')"><img src="https://assets.dearplayers.com/gplay-data/icons/call-of-duty-mobile-1742415387000" alt="COD"></div>
+    <div class="game-card" onclick="openTournament('BGMI')"><img src="https://sm.ign.com/ign_in/game/b/battlegrou/battlegrounds-mobile-india_ze4x.jpg" alt="BGMI"></div>
+  </div>
+</section>
+
+<section id="tournament-page">
+  <div class="tournament-details-btn" onclick="showDetails()">📋 Tournament Details</div>
+
+  <img id="tournament-img" src="" alt="">
+  <h2 id="tournament-title"></h2>
+
+  <div class="glow-panel">
+    <div class="glow-row"><span class="glow-label">Tournament Time:</span><span class="glow-value">7:00 PM</span></div>
+    <div class="glow-row"><span class="glow-label">Countdown:</span><span class="glow-value" id="countdown">--:--:--</span></div>
+    <div class="glow-row"><span class="glow-label">Entries:</span><span class="glow-value"><span id="entriesCount">0</span> / 50</span></div>
+  </div>
+
+  <input type="text" placeholder="Player Name" id="playerName">
+  <input type="text" placeholder="Player ID" id="playerId">
+  <select id="chosenGame">
+    <option value="">Select Game</option>
+    <option value="Free Fire">Free Fire</option>
+    <option value="BGMI">BGMI</option>
+    <option value="Pokémon Unite">Pokémon Unite</option>
+    <option value="COD">Call of Duty Mobile</option>
+  </select>
+
+  <div class="notice-box">
+    Notice: You can enter the tournament only if you pay ₹20 entry fee. You will receive the custom ID or room ID 15 minutes before tournament starts via your mobile message or WhatsApp. If you win the tournament, the prize will automatically be credited to your UPI app.
+  </div>
+
+  <a href="upi://pay?pa=8169151199@fam&pn=Hyra&am=20&cu=INR" target="_blank" id="payNowLink">
+    <button id="payNowBtn">Pay Now ₹20</button>
+  </a>
+
+  <a href="#" id="submitEntry" class="submit-btn">Submit Entry</a>
+  <div id="postSubmitArea"></div>
+</section>
+
+<div class="info-box">
+  <p>🎮 Participate in your favourite game, show your skill, and win big prizes! 🏆 Choose your game, enter Player Name & Player ID, pay entry fee 💸, and join the WhatsApp group for tournament updates 📅⏰. Enroll now!</p>
+</div>
+
+<div class="whatsapp-box">
+  <p>Join our official WhatsApp group for updates!</p>
+  <a href="https://chat.whatsapp.com/your-group-link" target="_blank">Join Now</a>
+</div>
+
+<div id="detailsPopup">
+  <h3>📋 Tournament Details</h3>
+  <p>💸 Entry Fee: ₹20</p>
+  <p>🥇 First Prize: ₹400</p>
+  <p>🥈 Second Prize: ₹150</p>
+  <p>🥉 Third Prize: ₹50</p>
+  <button class="close-btn" onclick="closeDetails()">Close</button>
+</div>
+
+<script>
+let entries = 0;
+
+// Open tournament and show image/details
+function openTournament(gameName){
+  document.getElementById('tournament-page').classList.add('show');
+  document.getElementById('tournament-title').innerText = gameName + " Tournament";
+  let imgSrc='';
+  if(gameName=='Free Fire') imgSrc='https://i1.sndcdn.com/artworks-1fNo0tptQSdZl85i-y56KrQ-t500x500.jpg';
+  if(gameName=='Pokémon Unite') imgSrc='https://static1.srcdn.com/wordpress/wp-content/uploads/2021/07/Pokemon-Unite-Logo-and-Promo-Art.jpg';
+  if(gameName=='COD') imgSrc='https://assets.dearplayers.com/gplay-data/icons/call-of-duty-mobile-1742415387000';
+  if(gameName=='BGMI') imgSrc='https://sm.ign.com/ign_in/game/b/battlegrou/battlegrounds-mobile-india_ze4x.jpg';
+  document.getElementById('tournament-img').src=imgSrc;
+  document.getElementById('entriesCount').innerText = entries;
+}
+
+// Tournament Details popup
+function showDetails(){document.getElementById('detailsPopup').style.display='block';}
+function closeDetails(){document.getElementById('detailsPopup').style.display='none';}
+
+// Pay Now enables submit button
+document.getElementById('payNowBtn').addEventListener('click', function(){
+  document.getElementById('submitEntry').classList.add('active');
+});
+
+// Submit Entry
+document.getElementById('submitEntry').addEventListener('click', function(){
+  let playerName = document.getElementById('playerName').value;
+  let playerId = document.getElementById('playerId').value;
+  let game = document.getElementById('chosenGame').value;
+  if(!playerName || !playerId || !game){
+    alert("Please fill all fields and select game!");
+    return;
+  }
+  entries++;
+  document.getElementById('entriesCount').innerText = entries;
+  document.getElementById('postSubmitArea').innerText = "✅ Entry Submitted! You will get ID via message/WhatsApp before tournament.";
+  this.classList.remove('active');
+});
+</script>
+
+</body>
+</html>
